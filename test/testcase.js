@@ -22,7 +22,7 @@ var test = new Test("MP4", {
 if (IN_BROWSER || IN_NW) {
     test.add([
         testMP4_parse,
-        testMP4_parse_multitrack,
+        //testMP4_parse_multitrack,
         // browser and node-webkit test
     ]);
 } else if (IN_WORKER) {
