@@ -7,6 +7,7 @@ lint/plato/files
 lint/plato/*.html
 .Minify*
 release/*.min.js
+test/*.mp4
 #test/index.html
 #test/node.js
 #test/nw.html
