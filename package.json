@@ -1,9 +1,9 @@
 {
   "name": "uupaa.mp4.js",
-  "version": "0.1.1",
-  "description": "MP4 file parser and builder",
+  "version": "0.2.0",
+  "description": "MP4 file parser, builder and muxer.",
   "url": "https://github.com/uupaa/MP4.js",
-  "keywords": ["MP4", "H264", "AAC", "uupaa", "WebModule", "Unstable"],
+  "keywords": ["AVC", "MP4", "Parser", "Builder", "Muxer", "uupaa", "WebModule", "Unstable"],
   "repository": {
     "type": "git",
     "url": "https://github.com/uupaa/MP4.js.git"
@@ -16,45 +16,83 @@
     "watch": "node ../WebModule/run/watch.js --verbose --run lint",
     "page": "node ../WebModule/run/page.js --verbose",
     "test": "npm run min; npm run node; npm run browser",
-    "node": "NODE_ENV=production NODE_PATH=lib node --harmony test/node.js",
-    "noded": "NODE_ENV=production NODE_PATH=lib node --debug-brk --harmony test/node.js",
-    "browser": "open http://localhost:8000/MP4.js/test/index.html",
+    "node": "NODE_ENV=production NODE_PATH=lib node test/node/index.js",
+    "noded": "NODE_ENV=production NODE_PATH=lib node --debug-brk test/node/index.js",
+    "browser": "open http://localhost:8000/MP4.js/test/browser/index.html",
+    "el": "electron test/el",
+    "nw": "nw test/nw",
     "add-src": "node ../WebModule/run/add-src.js",
-    "sim": "node ../WebModule/run/sim.js http://localhost:8000/MP4.js/test/index.html",
+    "add-subclass": "node ../WebModule/run/add-subclass.js",
+    "sim": "node ../WebModule/run/sim.js http://localhost:8000/MP4.js/test/browser/index.html",
     "simx": "node ../WebModule/run/sim.js stop",
     "lint": "eslint lib/*.js",
     "score": "node ../WebModule/run/score.js; open lint/plato/index.html",
     "patch": "node ../WebModule/run/patch.js",
     "setup": "node ../WebModule/run/setup.js",
     "start": "cd ../; Python -m SimpleHTTPServer 8000 &",
-    "stop": "killall -- Python -m SimpleHTTPServer 8000; exit 0"
+    "stop": "killall -- Python -m SimpleHTTPServer 8000; exit 0",
+    "make_assets": "cd test/assets; ./make_video; cd -",
+    "clean_assets": "cd test/assets; rm -rf ./ff; rm -rf ./js; cd -"
   },
   "webmodule": {
     "develop": false,
     "label": ["@dev"],
     "browser": {
-      "source": ["lib/MP4.js"],
-      "output": "release/MP4.b.min.js"
+      "output": "release/MP4.b.min.js",
+      "source": [
+        "lib/MP4Builder.js",
+        "lib/MP4Muxer.js",
+        "lib/MP4Parser.js",
+        "lib/MP4.js"
+      ]
     },
     "worker": {
-      "source": ["lib/MP4.js"],
-      "output": "release/MP4.w.min.js"
+      "output": "release/MP4.w.min.js",
+      "source": [
+        "lib/MP4Builder.js",
+        "lib/MP4Muxer.js",
+        "lib/MP4Parser.js",
+        "lib/MP4.js"
+      ]
     },
     "node": {
-      "source": ["lib/MP4.js"],
-      "output": "release/MP4.n.min.js"
+      "output": "release/MP4.n.min.js",
+      "source": [
+        "lib/MP4Builder.js",
+        "lib/MP4Muxer.js",
+        "lib/MP4Parser.js",
+        "lib/MP4.js"
+      ]
     },
     "nw": {
-      "source": ["lib/MP4.js"],
-      "output": "release/MP4.nw.min.js"
+      "output": "release/MP4.nw.min.js",
+      "source": [
+        "lib/MP4Builder.js",
+        "lib/MP4Muxer.js",
+        "lib/MP4Parser.js",
+        "lib/MP4.js"
+      ]
+    },
+    "el": {
+      "output": "release/MP4.el.min.js",
+      "source": [
+        "lib/MP4Builder.js",
+        "lib/MP4Muxer.js",
+        "lib/MP4Parser.js",
+        "lib/MP4.js"
+      ]
     }
   },
   "dependencies": {
     "uupaa.bit.js": "",
+    "uupaa.hexdump.js": "",
+    "uupaa.nalunit.js": "",
     "uupaa.typedarray.js": ""
   },
   "devDependencies": {
-    "uupaa.assetfortest.js": ""
+    "uupaa.task.js": "",
+    "uupaa.fileloader.js": "",
+    "uupaa.h264rawstream.js": ""
   },
   "lib": "./lib/",
   "main": "./index.js",

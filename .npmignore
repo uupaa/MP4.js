@@ -7,13 +7,14 @@ lint/plato/files
 lint/plato/*.html
 .Minify*
 release/*.min.js
-test/*.mp4
 #test/index.html
 #test/node.js
 #test/nw.html
 #test/package.json
 #test/wmtools.js
 #test/worker.js
+test/assets/ff
+test/assets/js
 
 ## ignore the setting files
 .vimrc*

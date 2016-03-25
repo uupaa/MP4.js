@@ -2,12 +2,15 @@
 
 [![npm](https://nodei.co/npm/uupaa.mp4.js.svg?downloads=true&stars=true)](https://nodei.co/npm/uupaa.mp4.js/)
 
-MP4 file parser and builder
+MP4 file parser, builder and muxer.
 
-- Please refer to [Spec](https://github.com/uupaa/MP4.js/wiki/) and [API Spec](https://github.com/uupaa/MP4.js/wiki/MP4) links.
-- The MP4.js is made of [WebModule](https://github.com/uupaa/WebModule).
+This module made of [WebModule](https://github.com/uupaa/WebModule).
 
-## Browser and NW.js(node-webkit)
+## Documentation
+- [Spec](https://github.com/uupaa/MP4.js/wiki/)
+- [API Spec](https://github.com/uupaa/MP4.js/wiki/MP4)
+
+## Browser, NW.js and Electron
 
 ```js
 <script src="<module-dir>/lib/WebModule.js"></script>

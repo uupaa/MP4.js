@@ -1,147 +1,134 @@
 var ModuleTestMP4 = (function(global) {
 
-global["BENCHMARK"] = false;
-
-var test = new Test("MP4", {
+var test = new Test(["MP4"], { // Add the ModuleName to be tested here (if necessary).
         disable:    false, // disable all tests.
         browser:    true,  // enable browser test.
-        worker:     true,  // enable worker test.
-        node:       true,  // enable node test.
-        nw:         true,  // enable nw.js test.
+        worker:     false, // enable worker test.
+        node:       false, // enable node test.
+        nw:         false, // enable nw.js test.
+        el:         true,  // enable electron (render process) test.
         button:     true,  // show button.
-        both:       true,  // test the primary and secondary modules.
+        both:       false, // test the primary and secondary modules.
         ignoreError:false, // ignore error.
         callback:   function() {
         },
         errorback:  function(error) {
+            console.error(error.message);
         }
-    }).add([
-        // generic test
-    ]);
+    });
 
-if (IN_BROWSER || IN_NW) {
+if (IN_BROWSER || IN_NW || IN_EL) {
     test.add([
-        testMP4_parse,
-        //testMP4_parse_multitrack,
-        // browser and node-webkit test
-    ]);
-} else if (IN_WORKER) {
-    test.add([
-        // worker test
-    ]);
-} else if (IN_NODE) {
-    test.add([
-        // node.js and io.js test
+            testH264RawStream,
+            testMP4_ffmpeg_created_mp4_file,
     ]);
 }
 
 // --- test cases ------------------------------------------
-function testMP4_parse(test, pass, miss) {
-    var url = "../node_modules/uupaa.assetfortest.js/assets/MP4/res/video/7.mp4";
-//    MP4.VERBOSE = true;
-    global["BENCHMARK"] = true;
+function testH264RawStream(test, pass, miss) {
+    //
+    // $ npm run make_asset
+    //
+    // $ npm run el
+    //
+    // Raw H.264 file stream ( ff/png.00.mp4.264 ) の中身を確認する
 
-    TypedArray.toArrayBuffer(url, function(buffer) {
-        console.log("LOADED: ", url, buffer.byteLength);
+    var url1 = "../assets/ff/png.00.mp4.264";
+    var url2 = "../assets/ff/png.00.mp4";
 
-        var now = performance.now();
-        var mp4box = MP4.parse(new Uint8Array(buffer));
-        var cost = performance.now() - now;
-        console.log("parse cost: " + cost);
-        console.dir(mp4box);
+    var task = new Task("testH264RawStream", 2, function(error, buffer) {
+        // --- decode Raw H.264 stream ---
+        var videoH264RawStream = buffer[0];
+        var videoNALUnitObject = H264RawStream.toNALUnitObject( videoH264RawStream );
 
-        if (mp4box.ftyp &&
-            mp4box.mdat &&
-            mp4box.moov &&
-            mp4box.moov.mvhd &&
-            mp4box.moov.trak &&
-            Array.isArray(mp4box.moov.trak) &&
-            mp4box.moov.trak[0].edts &&
-            mp4box.moov.trak[0].edts.elst &&
-            mp4box.moov.trak[0].mdia &&
-            mp4box.moov.trak[0].mdia.hdlr &&
-            mp4box.moov.trak[0].mdia.mdhd &&
-            mp4box.moov.trak[0].mdia.minf &&
-            mp4box.moov.trak[0].mdia.minf.dinf &&
-            mp4box.moov.trak[0].mdia.minf.dinf.dref &&
-            mp4box.moov.trak[0].mdia.minf.stbl &&
-            mp4box.moov.trak[0].mdia.minf.stbl.stco &&
-            mp4box.moov.trak[0].mdia.minf.stbl.stsc &&
-            mp4box.moov.trak[0].mdia.minf.stbl.stsd &&
-            mp4box.moov.trak[0].mdia.minf.stbl.stss &&
-            mp4box.moov.trak[0].mdia.minf.stbl.stsz &&
-            mp4box.moov.trak[0].mdia.minf.stbl.stts &&
-            mp4box.moov.trak[0].mdia.minf.vmhd &&
-            mp4box.moov.trak[0].tkhd &&
-            mp4box.moov.udta &&
-            mp4box.moov.udta.meta &&
-            mp4box.moov.udta.meta.hdlr &&
-            mp4box.moov.udta.meta.ilst) {
-
-            test.done(pass());
-        } else {
-            test.done(miss());
-        }
-
-    }, function(error) {
-        console.error(error.message);
-    });
-}
-
-function testMP4_parse_multitrack(test, pass, miss) {
-    var url = "./320x180.mp4";
-//    MP4.VERBOSE = true;
-    global["BENCHMARK"] = true;
-
-    TypedArray.toArrayBuffer(url, function(buffer) {
-        console.log("LOADED: ", url, buffer.byteLength);
-
-        var now = performance.now();
-        var mp4box = MP4.parse(new Uint8Array(buffer));
-        var cost = performance.now() - now;
-        console.log("parse cost: " + cost);
-        console.dir(mp4box);
-
-        if (mp4box.ftyp &&
-            mp4box.mdat &&
-            mp4box.moov &&
-            mp4box.moov.mvhd &&
-            mp4box.moov.trak &&
-            Array.isArray(mp4box.moov.trak) &&
 /*
-            mp4box.moov.trak.edts &&
-            mp4box.moov.trak.edts.elst &&
-            mp4box.moov.trak.mdia &&
-            mp4box.moov.trak.mdia.hdlr &&
-            mp4box.moov.trak.mdia.mdhd &&
-            mp4box.moov.trak.mdia.minf &&
-            mp4box.moov.trak.mdia.minf.dinf &&
-            mp4box.moov.trak.mdia.minf.dinf.dref &&
-            mp4box.moov.trak.mdia.minf.stbl &&
-            mp4box.moov.trak.mdia.minf.stbl.stco &&
-            mp4box.moov.trak.mdia.minf.stbl.stsc &&
-            mp4box.moov.trak.mdia.minf.stbl.stsd &&
-            mp4box.moov.trak.mdia.minf.stbl.stss &&
-            mp4box.moov.trak.mdia.minf.stbl.stsz &&
-            mp4box.moov.trak.mdia.minf.stbl.stts &&
-            mp4box.moov.trak.mdia.minf.vmhd &&
-            mp4box.moov.trak.tkhd &&
- */
-            mp4box.moov.udta &&
-            mp4box.moov.udta.meta &&
-            mp4box.moov.udta.meta.hdlr &&
-            mp4box.moov.udta.meta.ilst) {
+        HexDump(videoH264RawStream);
 
+        console.dir(videoNALUnitObject[0]);
+        console.dir(videoNALUnitObject[1]);
+
+        if (videoNALUnitObject[0].NAL_UNIT_TYPE === "SEI" &&
+            videoNALUnitObject[1].NAL_UNIT_TYPE === "IDR") {
             test.done(pass());
         } else {
             test.done(miss());
         }
+ */
 
+        // --- decode MP4 file ---
+        var mp4box = MP4Parser.parse( buffer[1] );
+/*
+        HexDump(mp4box.root.mdat.data);
+
+        console.dir(mp4box);
+ */
+
+        if ( _binaryCompare(videoH264RawStream, mp4box.root.mdat.data) ) {
+            test.done(pass());
+        } else {
+            test.done(miss());
+        }
+    });
+
+    FileLoader.toArrayBuffer(url1, function(buffer, url) {
+        console.log("LOAD FROM: ", url, buffer.byteLength);
+        task.buffer[0] = new Uint8Array(buffer);
+        task.pass();
+    });
+
+    FileLoader.toArrayBuffer(url2, function(buffer, url) {
+        console.log("LOAD FROM: ", url, buffer.byteLength);
+        task.buffer[1] = new Uint8Array(buffer);
+        task.pass();
+    });
+}
+
+function _binaryCompare(a, b) {
+    if (a.length !== b.length) {
+        debugger;
+        return false;
+    }
+
+    for (var i = 0, iz = a.length; i < iz; ++i) {
+        if (a[i] !== b[i]) {
+debugger;
+            return false;
+        }
+    }
+    return true;
+}
+
+
+
+
+function testMP4_ffmpeg_created_mp4_file(test, pass, miss) {
+    // MP4.parse("ff/png.00.mp4") して mdat の中身を tree 表示する。目視で確認
+
+console.clear();
+    var url1 = "../assets/ff/png.00.mp4";
+
+    FileLoader.toArrayBuffer(url1, function(buffer) {
+        console.log("LOAD FROM: ", url1, buffer.byteLength);
+        var mp4box1;
+
+        mp4box1 = MP4Parser.parse( new Uint8Array(buffer) );
+
+        console.info("mp4box1");
+        console.dir(mp4box1);
+
+        console.info("mp4box1.root.moov.trak[0].mdia.minf.stbl");
+        console.dir(mp4box1.root.moov.trak[0].mdia.minf.stbl);
+
+        HexDump(mp4box1.root.mdat.data, {
+            title: "mp4box1.root.mdat.data",
+            rule: {}
+        });
+
+        test.done(pass());
     }, function(error) {
         console.error(error.message);
     });
 }
-
 
 return test.run();
 
