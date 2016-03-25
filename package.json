@@ -1,6 +1,6 @@
 {
   "name": "uupaa.mp4.js",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "MP4 file parser, builder and muxer.",
   "url": "https://github.com/uupaa/MP4.js",
   "keywords": ["AVC", "MP4", "Parser", "Builder", "Muxer", "uupaa", "WebModule", "Unstable"],
@@ -97,6 +97,6 @@
   "lib": "./lib/",
   "main": "./index.js",
   "author": "uupaa",
-  "license": "MIT",
+  "license": "Apache License Version 2.0",
   "contributors": []
 }
